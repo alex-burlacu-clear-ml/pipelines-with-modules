@@ -116,8 +116,8 @@ def load_data_events():
     return_values=["full_df"],
     cache=False,
     task_type=Task.TaskTypes.data_processing,
-    # repo="git@github.com:alex-burlacu-clear-ml/test.git",
-    # packages=["-r requirements.txt"],
+    repo="git@github.com:alex-burlacu-clear-ml/pipelines-with-modules.git",
+    packages=["pandas", "clearml"],
 )
 def join_data(users_df, events_df):
     # TODO: make or reuse dataset, keep lineage info
@@ -229,6 +229,7 @@ def train_model(model, criterion, X_train, y_train):
     import torch
     from tensorboardX import SummaryWriter
     import time
+    import numpy as np
     from tqdm import tqdm
 
     num_epochs = 20
@@ -243,7 +244,7 @@ def train_model(model, criterion, X_train, y_train):
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     dataset = torch.utils.data.TensorDataset(
-        torch.from_numpy(X_train).float(), torch.from_numpy(y_train).float()
+        torch.from_numpy(np.array(X_train)).float(), torch.from_numpy(np.array(y_train)).float()
     )
     dataloader = torch.utils.data.DataLoader(
         dataset, batch_size=batch_size, shuffle=True
@@ -354,6 +355,7 @@ def evaluate_data(full_df):
 )
 def evaluate_model(model, criterion, X_test, y_test):
     from sklearn import metrics
+    import numpy as np
     import torch
     import time
     from tqdm import tqdm
@@ -370,7 +372,7 @@ def evaluate_model(model, criterion, X_test, y_test):
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     dataset = torch.utils.data.TensorDataset(
-        torch.from_numpy(X_test).float(), torch.from_numpy(y_test).float()
+        torch.from_numpy(np.array(X_test)).float(), torch.from_numpy(np.array(y_test)).float()
     )
     dataloader = torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=True)
 
